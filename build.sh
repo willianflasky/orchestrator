@@ -5,10 +5,11 @@
 # Requires fpm: https://github.com/jordansissel/fpm
 #
 set -e
+GOPATH="/Users/willian/go"
 
 basedir=$(dirname $0)
 GIT_COMMIT=$(git rev-parse HEAD)
-RELEASE_VERSION=
+RELEASE_VERSION="3.2.6"
 RELEASE_SUBVERSION=
 release_base_path=/tmp/orchestrator-release
 export RELEASE_VERSION release_base_path
