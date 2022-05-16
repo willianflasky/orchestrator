@@ -18,13 +18,14 @@ package inst
 
 import (
 	"fmt"
+	"reflect"
 	"regexp"
 	"time"
 
 	"github.com/openark/orchestrator/go/config"
 	"github.com/openark/orchestrator/go/db"
 	"github.com/openark/orchestrator/go/process"
-	"github.com/openark/orchestrator/go/raft"
+	orcraft "github.com/openark/orchestrator/go/raft"
 	"github.com/openark/orchestrator/go/util"
 
 	"github.com/openark/golib/log"
@@ -483,6 +484,14 @@ func GetReplicationAnalysis(clusterName string, hints *ReplicationAnalysisHints)
 
 		a.IsReadOnly = m.GetUint("read_only") == 1
 
+		// 遍历 analysis result a:
+		t := reflect.TypeOf(a)
+		v := reflect.ValueOf(a)
+		for i := 0; i < t.NumField(); i++ {
+			fie := t.Field(i)
+			val := v.Field(i)
+			fmt.Printf("[a]: %v:%v", fie, val)
+		}
 		if !a.LastCheckValid {
 			analysisMessage := fmt.Sprintf("analysis: ClusterName: %+v, IsMaster: %+v, LastCheckValid: %+v, LastCheckPartialSuccess: %+v, CountReplicas: %+v, CountValidReplicas: %+v, CountValidReplicatingReplicas: %+v, CountLaggingReplicas: %+v, CountDelayedReplicas: %+v, CountReplicasFailingToConnectToMaster: %+v",
 				a.ClusterDetails.ClusterName, a.IsMaster, a.LastCheckValid, a.LastCheckPartialSuccess, a.CountReplicas, a.CountValidReplicas, a.CountValidReplicatingReplicas, a.CountLaggingReplicas, a.CountDelayedReplicas, a.CountReplicasFailingToConnectToMaster,
@@ -491,7 +500,7 @@ func GetReplicationAnalysis(clusterName string, hints *ReplicationAnalysisHints)
 				log.Debugf(analysisMessage)
 			}
 		}
-		if !a.IsReplicationGroupMember /* Traditional Async/Semi-sync replication issue detection */ {
+		if !a.IsReplicationGroupMember /* Traditional Async/Semi-sync replication issue detection。传统的异步和半同步复制问题检查 */ {
 			if a.IsMaster && !a.LastCheckValid && a.CountReplicas == 0 {
 				a.Analysis = DeadMasterWithoutReplicas
 				a.Description = "Master cannot be reached by orchestrator and has no replica"
@@ -627,6 +636,7 @@ func GetReplicationAnalysis(clusterName string, hints *ReplicationAnalysisHints)
 			//		}
 
 		} else /* Group replication issue detection */ {
+			// 组成员不可达，有副本，并且它的可达副本不能从它复制
 			// Group member is not reachable, has replicas, and none of its reachable replicas can replicate from it
 			if !a.LastCheckValid && a.CountReplicas > 0 && a.CountValidReplicatingReplicas == 0 {
 				a.Analysis = DeadReplicationGroupMemberWithReplicas
@@ -634,6 +644,7 @@ func GetReplicationAnalysis(clusterName string, hints *ReplicationAnalysisHints)
 			}
 
 		}
+
 		appendAnalysis := func(analysis *ReplicationAnalysis) {
 			if a.Analysis == NoProblem && len(a.StructureAnalysis) == 0 && !hints.IncludeNoProblem {
 				return
@@ -670,7 +681,7 @@ func GetReplicationAnalysis(clusterName string, hints *ReplicationAnalysisHints)
 
 		{
 			// Moving on to structure analysis
-			// We also do structural checks. See if there's potential danger in promotions
+			// We also do structural checks. See if there's potential danger in promotions们也做结构检查。看看升新主是否有潜在的危险。
 			if a.IsMaster && a.CountLoggingReplicas == 0 && a.CountReplicas > 1 {
 				a.StructureAnalysis = append(a.StructureAnalysis, NoLoggingReplicasStructureWarning)
 			}

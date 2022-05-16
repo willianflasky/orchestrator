@@ -116,8 +116,8 @@ build_binary() {
   debug "Building via $(go version)"
   mkdir -p "$binary_build_path/bin"
   rm -f $binary_artifact
-  gobuild="go build -i ${opt_race} -ldflags \"$ldflags\" -o $binary_artifact go/cmd/orchestrator/main.go"
-
+  gobuild="go build -ldflags \"$ldflags\" -o $binary_artifact go/cmd/orchestrator/main.go"
+  
   case $os in
     'linux')
       echo "GOOS=$os GOARCH=$arch $gobuild" | bash
