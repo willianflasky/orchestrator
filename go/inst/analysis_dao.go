@@ -487,11 +487,14 @@ func GetReplicationAnalysis(clusterName string, hints *ReplicationAnalysisHints)
 		// 遍历 analysis result a:
 		t := reflect.TypeOf(a)
 		v := reflect.ValueOf(a)
+		fmt.Println("===========[a]==========")
 		for i := 0; i < t.NumField(); i++ {
 			fie := t.Field(i)
 			val := v.Field(i)
-			fmt.Printf("[a]: %v:%v\n", fie.Name, val)
+			fmt.Println(fie.Name, val)
 		}
+		fmt.Println("=====================")
+
 		if !a.LastCheckValid {
 			analysisMessage := fmt.Sprintf("analysis: ClusterName: %+v, IsMaster: %+v, LastCheckValid: %+v, LastCheckPartialSuccess: %+v, CountReplicas: %+v, CountValidReplicas: %+v, CountValidReplicatingReplicas: %+v, CountLaggingReplicas: %+v, CountDelayedReplicas: %+v, CountReplicasFailingToConnectToMaster: %+v",
 				a.ClusterDetails.ClusterName, a.IsMaster, a.LastCheckValid, a.LastCheckPartialSuccess, a.CountReplicas, a.CountValidReplicas, a.CountValidReplicatingReplicas, a.CountLaggingReplicas, a.CountDelayedReplicas, a.CountReplicasFailingToConnectToMaster,
