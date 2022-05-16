@@ -18,7 +18,6 @@ package inst
 
 import (
 	"fmt"
-	"reflect"
 	"regexp"
 	"time"
 
@@ -485,14 +484,20 @@ func GetReplicationAnalysis(clusterName string, hints *ReplicationAnalysisHints)
 		a.IsReadOnly = m.GetUint("read_only") == 1
 
 		// 遍历 analysis result a:
-		t := reflect.TypeOf(a)
-		v := reflect.ValueOf(a)
+
 		fmt.Println("===========[a]==========")
-		for i := 0; i < t.NumField(); i++ {
-			fie := t.Field(i)
-			val := v.Field(i)
-			fmt.Println(fie.Name, val)
-		}
+		fmt.Println(a.AnalyzedInstanceKey)
+		fmt.Println(a.ClusterDetails)
+		fmt.Println(a.IsMaster)
+		fmt.Println(a.IsMaster)
+		fmt.Println(a.LastCheckValid)
+		fmt.Println(a.CountReplicas)
+		fmt.Println(a.CountValidReplicas)
+		fmt.Println(a.CountValidReplicatingReplicas)
+		fmt.Println(a.Replicas)
+		fmt.Println(a.IsReadOnly)
+		fmt.Println(a.GTIDMode)
+		fmt.Println(a.Analysis)
 		fmt.Println("=====================")
 
 		if !a.LastCheckValid {
