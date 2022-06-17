@@ -484,21 +484,21 @@ func GetReplicationAnalysis(clusterName string, hints *ReplicationAnalysisHints)
 		a.IsReadOnly = m.GetUint("read_only") == 1
 
 		// 遍历 analysis result a:
-
-		fmt.Println("===========[a]==========")
-		fmt.Println("AnalyzedInstanceKey: ", a.AnalyzedInstanceKey)
-		fmt.Println("ClusterDetails: ", a.ClusterDetails)
-		fmt.Println("IsMaster: ", a.IsMaster)
-		fmt.Println("LastCheckValid: ", a.LastCheckValid)
-		fmt.Println("CountReplicas: ", a.CountReplicas)
-		fmt.Println("CountValidReplicas: ", a.CountValidReplicas)
-		fmt.Println("CountValidReplicatingReplicas: ", a.CountValidReplicatingReplicas)
-		fmt.Println("Replicas: ", a.Replicas)
-		fmt.Println("IsReadOnly: ", a.IsReadOnly)
-		fmt.Println("GTIDMode: ", a.GTIDMode)
-		fmt.Println("Analysis: ", a.Analysis)
-		fmt.Println("=====================")
-
+		/*
+			fmt.Println("===========[a]==========")
+			fmt.Println("AnalyzedInstanceKey: ", a.AnalyzedInstanceKey)
+			fmt.Println("ClusterDetails: ", a.ClusterDetails)
+			fmt.Println("IsMaster: ", a.IsMaster)
+			fmt.Println("LastCheckValid: ", a.LastCheckValid)
+			fmt.Println("CountReplicas: ", a.CountReplicas)
+			fmt.Println("CountValidReplicas: ", a.CountValidReplicas)
+			fmt.Println("CountValidReplicatingReplicas: ", a.CountValidReplicatingReplicas)
+			fmt.Println("Replicas: ", a.Replicas)
+			fmt.Println("IsReadOnly: ", a.IsReadOnly)
+			fmt.Println("GTIDMode: ", a.GTIDMode)
+			fmt.Println("Analysis: ", a.Analysis)
+			fmt.Println("=====================")
+		*/
 		if !a.LastCheckValid {
 			analysisMessage := fmt.Sprintf("analysis: ClusterName: %+v, IsMaster: %+v, LastCheckValid: %+v, LastCheckPartialSuccess: %+v, CountReplicas: %+v, CountValidReplicas: %+v, CountValidReplicatingReplicas: %+v, CountLaggingReplicas: %+v, CountDelayedReplicas: %+v, CountReplicasFailingToConnectToMaster: %+v",
 				a.ClusterDetails.ClusterName, a.IsMaster, a.LastCheckValid, a.LastCheckPartialSuccess, a.CountReplicas, a.CountValidReplicas, a.CountValidReplicatingReplicas, a.CountLaggingReplicas, a.CountDelayedReplicas, a.CountReplicasFailingToConnectToMaster,

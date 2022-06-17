@@ -16,6 +16,7 @@ var (
 	logspath  = filepath.Join(base_dir, "logs")
 	oldmaster string
 	newmaster string
+	port      int
 )
 
 func main() {
@@ -39,9 +40,11 @@ func main() {
 	// args
 	flag.StringVar(&oldmaster, "old", "", "old master. eg: 10.1.1.1")
 	flag.StringVar(&newmaster, "new", "", "new master. eg: 10.1.1.2")
+	flag.IntVar(&port, "port", 61106, "mysql port. eg: 61106")
 	flag.Parse()
 
-	// 1. init Info and
-	info := logic.NewInfo(oldmaster, newmaster)
+	// 1. init Info and run
+	info := logic.NewInfo(oldmaster, newmaster, port)
+	L.Error("------------------split line ----------------------")
 	info.Run()
 }
