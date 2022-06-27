@@ -17,12 +17,12 @@ func OpertionDB_dao(oldmaster, newmaster string) (RWDomain, RODomain string, err
 			panic(p) // re-throw panic after Rollback
 		} else if err != nil {
 			fmt.Println("rollback")
-			L.Error("rollback")
+			L.Error("db result: rollback")
 			tx.Rollback() // err is non-nil; don't change it
 		} else {
 			err = tx.Commit() // err is nil; if Commit returns error update err
 			fmt.Println("commit")
-			L.Info("commit")
+			L.Info("db result: commit")
 		}
 	}()
 	// 1. get domain_rw

@@ -42,11 +42,15 @@ func (self *Info) dnsapi_get(domain string) (hosts []interface{}) {
 			mp := item.(map[string]interface{})
 			hosts = append(hosts, mp["content"])
 		}
-		L.Info("request success. hosts: %v", hosts...)
+		L.Info("dnsapi_get success. hosts: ")
+		for _, host := range hosts {
+			L.Info("[%v]", host)
+		}
+
 		return hosts
 	} else {
-		L.Error("request failed")
-		fmt.Println("request failed")
+		L.Error("dnsapi_get failed")
+		fmt.Println("dnsapi_get failed")
 	}
 	return hosts
 }
@@ -92,8 +96,8 @@ func (self *Info) dnsapi_update(oldmaster, newmaster, domain string) bool {
 		L.Error(msg)
 		return false
 	} else {
-		fmt.Println("request success.")
-		L.Info("request success.")
+		fmt.Println("dnsapi_update success.")
+		L.Info("dnsapi_update success. domain: [%v] old: [%v] new: [%v]", domain, oldmaster, newmaster)
 	}
 	return true
 }
@@ -138,8 +142,8 @@ func (self *Info) dnsapi_del(newmaster, domain string) bool {
 		L.Error(msg)
 		return false
 	} else {
-		fmt.Println("request success.")
-		L.Info("request success.")
+		fmt.Println("dnsapi_del success.")
+		L.Info("dnsapi_del success.")
 	}
 	return true
 }

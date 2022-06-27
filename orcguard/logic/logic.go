@@ -29,7 +29,13 @@ func (self *Info) Run() {
 		return
 	} else {
 		// 记录info信息到日志
-		L.Info("info: %v", self)
+		L.Info("=====【data】=====")
+		L.Info("RWDomain: %v", self.RWDomain)
+		L.Info("RODomain: %v", self.RODomain)
+		L.Info("OldMaster: %v", self.Oldmaster)
+		L.Info("NewMaster: %v", self.Newmaster)
+		L.Info("Port: %v\n", self.Port)
+
 		// 1. 修改写域名
 		host := self.dnsapi_get(self.RWDomain)
 		if len(host) != 1 {
