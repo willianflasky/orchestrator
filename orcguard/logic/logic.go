@@ -29,7 +29,7 @@ func (self *Info) Run() {
 		if self.CheckPort() {
 			InitDB(self.Oldmaster, self.Port)
 			val := get_readonly()
-			fmt.Println("read_only: ", val)
+			L.Info("read_only: ", val)
 			db.Close()
 		} else {
 			fmt.Println("port close")
