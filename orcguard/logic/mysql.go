@@ -35,6 +35,6 @@ func get_readonly() (val string) {
 		fmt.Printf("get readonly failed, err:%v\n", err)
 		return
 	}
-	fmt.Printf("name:%s val:%s\n", m.Name, m.Value)
+	fmt.Printf("name:%s val:%s\n", m.Variable_name, m.Value)
 	return m.Value
 }
