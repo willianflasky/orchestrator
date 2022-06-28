@@ -25,8 +25,17 @@ func NewInfo(old, new string, port int) *Info {
 }
 
 func (self *Info) Run() {
-	self.CheckPing()
-	self.CheckPort()
+	if self.CheckPing() {
+		if self.CheckPort() {
+			InitDB(self.Oldmaster, self.Port)
+			val := get_readonly()
+			fmt.Println("read_only: ", val)
+		} else {
+			fmt.Println("port close")
+		}
+	} else {
+		fmt.Println("host down")
+	}
 	/*
 		var err error
 		self.RWDomain, self.RODomain, err = mysql.OpertionDB_dao(self.Oldmaster, self.Newmaster)
