@@ -3,3 +3,5 @@
 [2022-06-28 11:42:03.998] [logic.go:76] [logic.(*Info).CheckOldmaster] [ERROR] ping [10.0.9.144] failure.
 [2022-06-28 11:43:47.574] [main.go:48] [main.main] [ERROR] ------------------split line ----------------------
 [2022-06-28 11:43:47.575] [logic.go:76] [logic.(*Info).CheckOldmaster] [ERROR] ping [10.0.9.144] failure.
+[2022-06-28 11:47:59.258] [main.go:48] [main.main] [ERROR] ------------------split line ----------------------
+[2022-06-28 11:47:59.259] [logic.go:76] [logic.(*Info).CheckOldmaster] [ERROR] ping [10.0.9.144] failure.

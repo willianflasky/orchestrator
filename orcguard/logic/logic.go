@@ -69,9 +69,9 @@ func (self *Info) Run() {
 }
 
 func (self *Info) CheckOldmaster() {
-	cmd := fmt.Sprintf("%v %v %v %v %v ", "ping", "-w 1", "-f", "-c 4", self.Oldmaster)
+	cmd := fmt.Sprintf("%v %v %v %v %v ", "/bin/ping", "-w 1", "-f", "-c 4", self.Oldmaster)
 	out, err := exec.Command(cmd).Output()
-	fmt.Println(cmd)
+	fmt.Println(cmd, err)
 	if err != nil {
 		L.Error("ping [%v] failure.", self.Oldmaster)
 	}
