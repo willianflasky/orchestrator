@@ -5,3 +5,13 @@
 [2022-06-28 11:43:47.575] [logic.go:76] [logic.(*Info).CheckOldmaster] [ERROR] ping [10.0.9.144] failure.
 [2022-06-28 11:47:59.258] [main.go:48] [main.main] [ERROR] ------------------split line ----------------------
 [2022-06-28 11:47:59.259] [logic.go:76] [logic.(*Info).CheckOldmaster] [ERROR] ping [10.0.9.144] failure.
+[2022-06-28 11:55:10.571] [main.go:48] [main.main] [ERROR] ------------------split line ----------------------
+[2022-06-28 11:55:10.573] [logic.go:76] [logic.(*Info).CheckOldmaster] [ERROR] ping [10.0.9.144] failure.
+[2022-06-28 11:57:04.109] [main.go:48] [main.main] [ERROR] ------------------split line ----------------------
+[2022-06-28 11:57:04.111] [logic.go:76] [logic.(*Info).CheckOldmaster] [ERROR] ping [10.0.9.144] failure.
+[2022-06-28 12:00:29.392] [main.go:48] [main.main] [ERROR] ------------------split line ----------------------
+[2022-06-28 12:00:29.395] [logic.go:76] [logic.(*Info).CheckOldmaster] [ERROR] ping [10.0.9.144] failure.
+[2022-06-28 12:00:50.383] [main.go:48] [main.main] [ERROR] ------------------split line ----------------------
+[2022-06-28 12:00:50.386] [logic.go:77] [logic.(*Info).CheckOldmaster] [ERROR] ping [10.0.9.144] failure.
+[2022-06-28 12:01:15.602] [main.go:48] [main.main] [ERROR] ------------------split line ----------------------
+[2022-06-28 12:01:15.604] [logic.go:77] [logic.(*Info).CheckOldmaster] [ERROR] ping [10.0.9.144] failure.
