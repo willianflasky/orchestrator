@@ -1,8 +1,11 @@
 package logic
 
 import (
+	"fmt"
+	"net"
 	. "orcguard/mylogger"
 	"os/exec"
+	"time"
 )
 
 type Info struct {
@@ -22,7 +25,8 @@ func NewInfo(old, new string, port int) *Info {
 }
 
 func (self *Info) Run() {
-	self.CheckOldmaster()
+	self.CheckPing()
+	self.CheckPort()
 	/*
 		var err error
 		self.RWDomain, self.RODomain, err = mysql.OpertionDB_dao(self.Oldmaster, self.Newmaster)
@@ -67,11 +71,27 @@ func (self *Info) Run() {
 
 }
 
-func (self *Info) CheckOldmaster() {
+func (self *Info) CheckPing() bool {
 	out, err := exec.Command("/bin/ping", "-w 1", "-f", "-c 4 ", self.Oldmaster).Output()
 
 	if err != nil {
 		L.Error("ping [%v] failure.", self.Oldmaster)
+		return false
 	}
-	L.Info("ping [%v] ok, \n result: %v", self.Oldmaster, out)
+	L.Info("ping [%v] ok, \n result: %v", self.Oldmaster, string(out))
+
+	return true
+}
+
+func (self *Info) CheckPort() bool {
+	ip_port := fmt.Sprintf("%s:%d", self.Oldmaster, self.Port)
+	conn, err := net.DialTimeout("tcp", ip_port, 1*time.Second)
+	if err != nil || conn == nil {
+		L.Error("%v:%v closed", self.Oldmaster, self.Port)
+		return false
+	} else {
+		conn.Close()
+		L.Info("%v:%v Opened", self.Oldmaster, self.Port)
+		return true
+	}
 }
