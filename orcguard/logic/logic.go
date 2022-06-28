@@ -30,6 +30,7 @@ func (self *Info) Run() {
 			InitDB(self.Oldmaster, self.Port)
 			val := get_readonly()
 			fmt.Println("read_only: ", val)
+			db.Close()
 		} else {
 			fmt.Println("port close")
 		}
@@ -81,13 +82,13 @@ func (self *Info) Run() {
 }
 
 func (self *Info) CheckPing() bool {
-	out, err := exec.Command("/bin/ping", "-w 1", "-f", "-c 4 ", self.Oldmaster).Output()
+	err := exec.Command("/bin/ping", "-w 1", "-f", "-c 4 ", self.Oldmaster).Run()
 
 	if err != nil {
 		L.Error("ping [%v] failure.", self.Oldmaster)
 		return false
 	}
-	L.Info("ping [%v] ok, \n result: %v", self.Oldmaster, string(out))
+	L.Info("ping [%v] ok", self.Oldmaster)
 
 	return true
 }

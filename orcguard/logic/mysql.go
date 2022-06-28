@@ -12,12 +12,11 @@ var (
 	db       *sqlx.DB
 	username = "orchestrator"
 	password = "orch_monitorpd"
-	dbname   = "mysql"
+	dbname   = ""
 )
 
 func InitDB(ip string, port int) (err error) {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%v)/%s?charset=utf8mb4&parseTime=True", username, password, ip, port, dbname)
-	// 也可以使用MustConnect连接不成功就panic
 	db, err = sqlx.Connect("mysql", dsn)
 	if err != nil {
 		fmt.Printf("connect oldmaster DB failed, err:%v\n", err)
@@ -28,14 +27,10 @@ func InitDB(ip string, port int) (err error) {
 	return
 }
 
-func Close() {
-	_ = db.Close()
-}
-
 func get_readonly() (val string) {
-	sql := "show variables like 'read_only'"
+	sql := "show variables like ?"
 	var m models.Mysql_vars
-	err := db.Get(&m, sql)
+	err := db.Get(&m, sql, "read_only")
 	if err != nil {
 		fmt.Printf("get readonly failed, err:%v\n", err)
 		return
