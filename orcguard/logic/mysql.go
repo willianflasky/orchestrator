@@ -28,9 +28,9 @@ func InitDB(ip string, port int) (err error) {
 }
 
 func get_readonly() (val string) {
-	sql := "show variables like ?"
+	sqlStr := "show variables like 'read_only'"
 	var m models.Mysql_vars
-	err := db.Get(&m, sql, "read_only")
+	err := db.Get(&m, sqlStr)
 	if err != nil {
 		fmt.Printf("get readonly failed, err:%v\n", err)
 		return
