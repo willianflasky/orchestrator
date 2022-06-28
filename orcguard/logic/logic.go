@@ -25,25 +25,32 @@ func NewInfo(old, new string, port int) *Info {
 }
 
 func (self *Info) Run() {
+	// 检查old master, 处理长连接
 	if self.CheckPing() {
 		if self.CheckPort() {
 			InitDB(self.Oldmaster, self.Port)
-			val := get_readonly()
-			L.Info("read_only: ", val)
+			v := GetReadOnly()
+			if v == "ON" {
+				KillConnection()
+			}
 			db.Close()
+
 		} else {
 			fmt.Println("port close")
 		}
 	} else {
 		fmt.Println("host down")
 	}
+
 	/*
+		// change db
 		var err error
 		self.RWDomain, self.RODomain, err = mysql.OpertionDB_dao(self.Oldmaster, self.Newmaster)
 		if err != nil {
 			L.Error("DB change failed: %v", err)
 			return
 		} else {
+
 			// 记录info信息到日志
 			L.Info("=====【data】=====")
 			L.Info("RWDomain: %v", self.RWDomain)
@@ -78,7 +85,6 @@ func (self *Info) Run() {
 			}
 		}
 	*/
-
 }
 
 func (self *Info) CheckPing() bool {

@@ -28,7 +28,7 @@ func InitDB(ip string, port int) (err error) {
 	return
 }
 
-func get_readonly() (val string) {
+func GetReadOnly() (v string) {
 	sqlStr := `show variables like 'read_only'`
 	var m models.Mysql_vars
 	err := db.QueryRow(sqlStr).Scan(&m.Variable_name, &m.Value)
@@ -38,4 +38,27 @@ func get_readonly() (val string) {
 	}
 	L.Info("name:%s val:%s\n", m.Variable_name, m.Value)
 	return m.Value
+}
+
+func KillConnection() {
+	sqlStr := " select id from information_schema.processlist where db is not null"
+	rows, err := db.Query(sqlStr)
+	if err != nil {
+		fmt.Printf("query failed, err:%v\n", err)
+		return
+	}
+	defer rows.Close()
+
+	var IDs []int
+	for rows.Next() {
+		var num int
+		err := rows.Scan(&num)
+		if err != nil {
+			fmt.Printf("scan failed, err:%v\n", err)
+			return
+		}
+		fmt.Printf("id: %v", IDs)
+		IDs = append(IDs, num)
+	}
+	L.Info("id: %v", IDs)
 }
