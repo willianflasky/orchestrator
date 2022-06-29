@@ -30,9 +30,10 @@ func (self *Info) Run() {
 		if self.CheckPort() {
 			InitDB(self.Oldmaster, self.Port)
 			v := GetReadOnly()
-			if v == "ON" {
-				KillConnection()
-			}
+			fmt.Println(v)
+			// if v == "ON" {
+			KillConnection()
+			// }
 			db.Close()
 		} else {
 			fmt.Println("port close")
