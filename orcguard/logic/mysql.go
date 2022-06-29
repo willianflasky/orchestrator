@@ -13,7 +13,7 @@ var (
 	db       *sql.DB
 	username = "orchestrator"
 	password = "orch_monitorpd"
-	dbname   = "mysql"
+	dbname   = ""
 )
 
 func InitDB(ip string, port int) (err error) {
@@ -57,8 +57,19 @@ func KillConnection() {
 			fmt.Printf("scan failed, err:%v\n", err)
 			return
 		}
-		fmt.Printf("id: %v", IDs)
 		IDs = append(IDs, num)
 	}
 	L.Info("id: %v", IDs)
+	if len(IDs) >= 1 {
+		KillId(IDs)
+	}
+
+}
+
+func KillId(IDs []int) {
+	for _, id := range IDs {
+		sqlStr := "kill ?"
+		db.QueryRow(sqlStr, id).Scan()
+	}
+	L.Info("ids killed")
 }

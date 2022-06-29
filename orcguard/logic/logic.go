@@ -3,6 +3,7 @@ package logic
 import (
 	"fmt"
 	"net"
+	"orcguard/dao/mysql"
 	. "orcguard/mylogger"
 	"os/exec"
 	"time"
@@ -25,66 +26,62 @@ func NewInfo(old, new string, port int) *Info {
 }
 
 func (self *Info) Run() {
-	// 检查old master, 处理长连接
-	if self.CheckPing() {
-		if self.CheckPort() {
-			InitDB(self.Oldmaster, self.Port)
-			v := GetReadOnly()
-			fmt.Println(v)
-			// if v == "ON" {
-			KillConnection()
-			// }
-			db.Close()
-		} else {
-			fmt.Println("port close")
-		}
+	// change db
+	var err error
+	self.RWDomain, self.RODomain, err = mysql.OpertionDB_dao(self.Oldmaster, self.Newmaster)
+	if err != nil {
+		L.Error("DB change failed: %v", err)
+		return
 	} else {
-		fmt.Println("host down")
-	}
+		// 记录info信息到日志
+		L.Info("=====【data】=====")
+		L.Info("RWDomain: %v", self.RWDomain)
+		L.Info("RODomain: %v", self.RODomain)
+		L.Info("OldMaster: %v", self.Oldmaster)
+		L.Info("NewMaster: %v", self.Newmaster)
+		L.Info("Port: %v\n", self.Port)
 
-	/*
-		// change db
-		var err error
-		self.RWDomain, self.RODomain, err = mysql.OpertionDB_dao(self.Oldmaster, self.Newmaster)
-		if err != nil {
-			L.Error("DB change failed: %v", err)
-			return
-		} else {
-
-			// 记录info信息到日志
-			L.Info("=====【data】=====")
-			L.Info("RWDomain: %v", self.RWDomain)
-			L.Info("RODomain: %v", self.RODomain)
-			L.Info("OldMaster: %v", self.Oldmaster)
-			L.Info("NewMaster: %v", self.Newmaster)
-			L.Info("Port: %v\n", self.Port)
-
-			// 1. 修改写域名
-			host := self.dnsapi_get(self.RWDomain)
-			if len(host) != 1 {
-				L.Error("rw a record ! = 1")
-			} else {
-				if self.Oldmaster == host[0] {
-					ret := self.dnsapi_update(self.Oldmaster, self.Newmaster, self.RWDomain)
-					if ret == false {
-						L.Error("self.dnsapi_update failed.")
-					}
-				} else {
-					L.Error("self.Oldmaster != host[0], please check.")
+		// 检查old master, 处理长连接
+		if self.CheckPing() {
+			if self.CheckPort() {
+				InitDB(self.Oldmaster, self.Port)
+				v := GetReadOnly()
+				if v == "ON" {
+					KillConnection()
 				}
+				db.Close()
+			} else {
+				fmt.Println("port close")
 			}
-			// 2. 修改读域名
-			hosts := self.dnsapi_get(self.RODomain)
-			if len(hosts) > 1 {
-				ret := self.dnsapi_del(self.Newmaster, self.RODomain)
+		} else {
+			fmt.Println("host down")
+		}
+
+		// 1. 修改写域名
+		host := self.dnsapi_get(self.RWDomain)
+		if len(host) != 1 {
+			L.Error("rw a record ! = 1")
+		} else {
+			if self.Oldmaster == host[0] {
+				ret := self.dnsapi_update(self.Oldmaster, self.Newmaster, self.RWDomain)
 				if ret == false {
-					L.Error("self.dnsapi_del failed.")
+					L.Error("self.dnsapi_update failed.")
 				}
 			} else {
-				L.Info("%v a record <= 1, so do not to del.", self.RODomain)
+				L.Error("self.Oldmaster != host[0], please check.")
 			}
 		}
-	*/
+		// 2. 修改读域名
+		hosts := self.dnsapi_get(self.RODomain)
+		if len(hosts) > 1 {
+			ret := self.dnsapi_del(self.Newmaster, self.RODomain)
+			if ret == false {
+				L.Error("self.dnsapi_del failed.")
+			}
+		} else {
+			L.Info("%v a record <= 1, so do not to del.", self.RODomain)
+		}
+	}
 }
 
 func (self *Info) CheckPing() bool {
