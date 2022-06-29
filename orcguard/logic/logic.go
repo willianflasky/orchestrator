@@ -34,7 +34,6 @@ func (self *Info) Run() {
 				KillConnection()
 			}
 			db.Close()
-
 		} else {
 			fmt.Println("port close")
 		}
