@@ -391,7 +391,6 @@ func executeProcesses(processes []string, description string, topologyRecovery *
 			go executeProcess(command, env, topologyRecovery, fullDescription)
 		} else {
 			if cmdErr := executeProcess(command, env, topologyRecovery, fullDescription); cmdErr != nil {
-				fmt.Printf("=============: %v", cmdErr)
 				if failOnError {
 					AuditTopologyRecovery(topologyRecovery, fmt.Sprintf("Not running further %s hooks", description))
 					return cmdErr
